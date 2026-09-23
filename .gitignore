@@ -44,3 +44,7 @@ htmlcov/
 *.swp
 *.swo
 *~
+
+# Documents
+ 
+docs/decisions.md
