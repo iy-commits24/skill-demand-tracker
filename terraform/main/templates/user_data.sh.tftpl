@@ -1,0 +1,18 @@
+#!/bin/bash
+
+set -euxo pipefail
+
+REGION='${region}'
+REGISTRY='${registry}'
+HOST_PORT='${host_port}'
+CONTAINER_PORT='8000'
+IMAGE='${image}'
+TAG='${tag}'
+
+# Pull docker image from ECR and run container
+
+dnf install docker -y
+systemctl enable docker.service && systemctl start docker.service
+aws ecr get-login-password --region "$REGION" | docker login --username AWS --password-stdin "$REGISTRY"
+docker pull "$REGISTRY/$IMAGE:$TAG"
+docker run --restart unless-stopped -d -p "$HOST_PORT:$CONTAINER_PORT" "$REGISTRY/$IMAGE:$TAG"
